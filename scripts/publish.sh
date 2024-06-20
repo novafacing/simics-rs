@@ -5,6 +5,8 @@
 
 set -e
 
+PACKAGE="${1}"
+
 SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
 SECRETS_FILE="${SCRIPT_DIR}/../.secrets"
 
@@ -26,20 +28,25 @@ if ! command -v cargo &>/dev/null; then
     exit 1
 fi
 
-cargo publish --token "${CRATES_IO_TOKEN}" --package ispm-wrapper
-sleep 120
-cargo publish --token "${CRATES_IO_TOKEN}" --package simics-package
-sleep 120
-cargo publish --token "${CRATES_IO_TOKEN}" --package simics-sign
-sleep 120
-cargo publish --token "${CRATES_IO_TOKEN}" --package cargo-simics-build
-sleep 120
-cargo publish --token "${CRATES_IO_TOKEN}" --package simics-api-sys
-sleep 120
-cargo publish --token "${CRATES_IO_TOKEN}" --package simics-build-utils
-sleep 120
-cargo publish --token "${CRATES_IO_TOKEN}" --package simics-macro
-sleep 120
-cargo publish --token "${CRATES_IO_TOKEN}" --package simics
-sleep 120
-cargo publish --token "${CRATES_IO_TOKEN}" --package simics-test
+if [ -n "${PACKAGE}" ]; then
+    cargo publish --token "${CRATES_IO_TOKEN}" --package "${PACKAGE}"
+    exit 0
+else
+    cargo publish --token "${CRATES_IO_TOKEN}" --package ispm-wrapper
+    sleep 120
+    cargo publish --token "${CRATES_IO_TOKEN}" --package simics-package
+    sleep 120
+    cargo publish --token "${CRATES_IO_TOKEN}" --package simics-sign
+    sleep 120
+    cargo publish --token "${CRATES_IO_TOKEN}" --package cargo-simics-build
+    sleep 120
+    cargo publish --token "${CRATES_IO_TOKEN}" --package simics-api-sys
+    sleep 120
+    cargo publish --token "${CRATES_IO_TOKEN}" --package simics-build-utils
+    sleep 120
+    cargo publish --token "${CRATES_IO_TOKEN}" --package simics-macro
+    sleep 120
+    cargo publish --token "${CRATES_IO_TOKEN}" --package simics
+    sleep 120
+    cargo publish --token "${CRATES_IO_TOKEN}" --package simics-test
+fi
